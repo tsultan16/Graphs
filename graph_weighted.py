@@ -86,6 +86,8 @@ def find_path(u, v, path, final_path, visited, adj_list, count):
 
 def is_connected(graph):
 
+    assert is_undirected(graph), "Error! Directed graphs are currently unsupported!"
+
     # first make sure the graph is connected
     adj_list = construct_adjacency_list(graph) 
     
@@ -116,6 +118,7 @@ def is_connected(graph):
 # determine if a connected graph is tree (Definition: A tree is a graph that is connected and has no cycles)
 def is_tree(graph):
 
+    assert is_undirected(graph), "Error! Directed graphs are currently unsupported!"
     
     if(not is_connected(graph)):
         print("Error! Graph is not connected and therefore cannot be a tree.")
@@ -129,11 +132,26 @@ def is_tree(graph):
         no_cycle = True
     return no_cycle   
 
+def is_undirected(graph):
+    adj_mat = construct_adjacency_matrix(graph)
+
+    for i in range(adj_mat.shape[0]):
+        for i2 in range(adj_mat.shape[0]-i):
+            j = i + i2
+            if(adj_mat[i,j] != adj_mat[j,i]):
+                print(f"adt_mat[{i},{j}] = {adj_mat[i,j]}, adt_mat[{j},{i}] = {adj_mat[j,i]} => not symmetric => directed")
+                return False
+
+    return True
+
 V = ('a', 'b', 'c', 'd', 'e', 'f')
 #E = (('a', 'd', 20),('a','c', 4),('c','e',9),('c','b',12),('b','f',3),('d','e', 5),('e','f',32))
 E = (('a', 'd', 20),('a','c', 4),('c','b',12),('b','f',3),('e','f',32))
 
 G = {'vertices': V, 'edges': E}
+
+assert is_undirected(G), "Error! Directed graphs are currently unsupported!"
+
 
 print(f"Graph vertices: {G['vertices']}")
 print(f"Graph edges: {G['edges']}")
@@ -149,3 +167,4 @@ vertex_f = V[5]
 print(f"Path between {vertex_i} and {vertex_f} = {find_path(vertex_i, vertex_f, path, final_path, visited, adj_list, count = 0)}")
 print(f"Graph is connected: {is_connected(G)}")
 print(f"Graph is tree: {is_tree(G)}")
+print(f"Graph is undirected: {is_undirected(G)}")
